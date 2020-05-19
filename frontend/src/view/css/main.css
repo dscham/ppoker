@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css?family=Cousine');
+
+* {
+    font-family: Cousine, monospace;
+
+    --body-color: 16, 16, 24;
+    --contrast-color: 200, 240, 255;
+    --contrast-dark-color: 96, 100, 150;
+
+    --box-background: linear-gradient(to right, rgba(var(--contrast-color), 0.15), rgba(var(--contrast-color),0.1) 50%, rgba(var(--contrast-color),0.05) 75%);
+
+    --text-color: var(--contrast-color);
+    --text-dark-color: var(--contrast-dark-color);
+}
+
+html, body {
+    margin: 0;
+    padding: 5px;
+    background: rgba(var(--body-color), 1);
+    color: rgba(var(--text-color), 1);
+}
+
+footer#page-footer{
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: calc(50% - (70% / 2));
+    margin: 10px;
+    padding: 0;
+    
+    min-width: 550px;
+    width: 70%;
+    height: 1.5em;
+
+    background: var(--box-background);
+}
+
+footer p {
+    margin: 0;
+    padding: 0.25em;
+    vertical-align: middle;
+
+    height: 1em;
+    line-height: 1em;
+
+    font-size: 1em;
+}
+
+a {
+    color: rgba(var(--text-color), 1);
+    text-decoration: none;  
+}
+
+a:link:hover, a:visited:hover {
+    color: rgba(var(--text-dark-color), 1);
+}
+
+a.current {
+    color: white;
+}
+
+.pull-right {
+    float: right;
+}
+
+/* Hide HTML5 Up and Down arrows. */
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+ 
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+/* Hide HTML5 Up and Down arrows. */
+
+div#planning-poker-container {
+    display: flex;
+    padding: 5px;
+}
+
+#planning-poker-container label {
+    display: inline-block;
+    width: 60px;
+}
+
+div#inputs {
+    width: calc(50%);
+}
+
+div#votes {
+    width: calc(50%);
+}

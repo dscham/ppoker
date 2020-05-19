@@ -28,13 +28,37 @@ function connectionHandler($, socket) {
         switch (data.command) {
             case 'vote':
                 console.log('<< vote from', $$.sockets.indexOf(socket));
-                $$.votes.push(data.data);
-                $$.sockets.forEach((sock) => sock.send(
-                    JSON.stringify({
-                        command: 'vote',
-                        data: $.votes.count
-                    })
-                ));
+                if (tryPushVote(data.data, $$.votes)) {
+                    $$.sockets.forEach((sock) => {
+                            if (sock === socket) {
+                                sock.send(
+                                    JSON.stringify({
+                                        command: 'vote',
+                                        data: {
+                                            acknowledge: true,
+                                            voteCount: $.votes.length
+                                        }
+                                    })
+                                );
+                            } else {
+                                sock.send(
+                                    JSON.stringify({
+                                        command: 'vote',
+                                        data: $.votes.length
+                                    })
+                                );
+                            }
+                        }
+                    );
+                } else {
+                    socket.send(
+                        JSON.stringify({
+                            command: 'error',
+                            data: `Vote for '${data.data.name}' already exists. Reconnect with new name or clear votes!`
+                        })
+                    )
+                }
+                //$$.votes.push(data.data);
                 break;
             case 'show':
                 console.log('<< show from', $$.sockets.indexOf(socket));
@@ -59,6 +83,12 @@ function connectionHandler($, socket) {
             default:
                 break;
         }
+    }
+    
+    function tryPushVote(vote, array) {
+        if (!!array.find(v => v.name === vote.name)) return false;
+        array.push(vote);
+        return true;
     }
 
     function errorHandler(err) {
