@@ -1,0 +1,125 @@
+<label for="url">URL</label>
+<input type="text" id="url" placeholder="example.com:1337">
+<button id="connect">Connect</button>
+<p id="connected" hidden></p>
+<br/>
+<button id="submit-vote">Submit Vote</button>
+<button id="show-votes">Show Votes</button>
+<button id="clear-votes">Clear Votes</button>
+<label for="responses" hidden>Response</label>
+<textarea id="responses" hidden></textarea>
+<div id="votes">
+
+</div>
+
+<script>
+    const urlField = document.querySelector('#url');
+    const connectButton = document.querySelector('#connect');
+    const connectedField = document.querySelector('#connected');
+    const submitVoteButton = document.querySelector('#submit-vote');
+    const showVotesButton = document.querySelector('#show-votes');
+    const clearVotesButton = document.querySelector('#clear-votes');
+    const responsesField = document.querySelector('#responses');
+    const votesOutput = document.querySelector('#votes');
+
+    const showCommandObject = {
+        command: 'show'
+    }
+    showVotesButton.title = JSON.stringify(showCommandObject);
+
+    let ws = {};
+
+    connectButton.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        connectedField.textContent = '';
+        connectedField.style['color'] = 'black';
+        connectedField.hidden = true;
+        responsesField.hidden = true;
+
+        ws = new WebSocket(`ws://${urlField.value}`);
+
+        ws.addEventListener('open', () => {
+            console.log('Opening websocket to ', `ws://${urlField.value}!`);
+
+            connectedField.textContent = `Connected to ws://${urlField.value}!`;
+            connectedField.style['color'] = 'green';
+            connectedField.hidden = false;
+        });
+
+        ws.addEventListener('message', (ev) => {
+            const data = JSON.parse(ev.data);
+
+            switch (data.command) {
+                case 'ping':
+                    console.log('<< ping');
+                    console.log('>> pong');
+                    ws.send(JSON.stringify({command: 'pong'}));
+                    break;
+                case 'vote':
+                    console.log('Vote count', data.data);
+                    break;
+                case 'show':
+                    votesOutput.innerHTML = '';
+                    data.data.forEach(renderVote);
+                    break;
+                case 'clear':
+                    votesOutput.innerHTML = '';
+                    break;
+                default:
+                    responsesField.value += ev.data;
+                    responsesField.hidden = false;
+                    break;
+            }
+
+            function renderVote(vote) {
+                const neww = document.createElement('p');
+                neww.textContent = JSON.stringify(vote);
+                votesOutput.appendChild(neww);
+            }
+        });
+
+        ws.addEventListener('error', (err) => {
+            console.log(err);
+
+            connectedField.textContent = `Error; Check console.`;
+            connectedField.style['color'] = 'red';
+            connectedField.hidden = false;
+        });
+    });
+
+    submitVoteButton.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        const command = getCommandObject('vote', 'test');
+        console.log('>> ', command);
+
+        ws.send(JSON.stringify(command));
+    })
+
+    showVotesButton.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        const command = getCommandObject('show');
+        console.log('>> ', command);
+
+        ws.send(JSON.stringify(command));
+    })
+
+    clearVotesButton.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        const command = getCommandObject('clear');
+        console.log('>> ', command);
+
+        ws.send(JSON.stringify(command));
+    })
+    
+    function getCommandObject(command, payload) {
+        return {
+            command : command,
+            data: payload
+        }
+    }
+
+</script>
