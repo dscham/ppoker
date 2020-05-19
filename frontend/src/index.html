@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Planning</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="view/css/main.css">
+        <link rel="stylesheet" href="view/css/font-awesome.min.css">
+    </head>
+    <body>
+        <h1>Planning Poker</h1>
+
+        <div id="planning-poker-container">
+            <div id="inputs">
+                <section id="session-inputs">
+                    <h3>Session</h3>
+                    <p>
+                        <label for="name">Name</label>
+                        <input type="text" id="name" placeholder="Clicky"/>
+                        <a id="need-name">Enter Name with at least 3 chars!</a>
+                    </p>
+                    <p>
+                        <label for="url">URL</label>
+                        <input type="text" id="url" placeholder="example.com:1337" disabled/>
+                        <button id="connect" disabled>Connect</button>
+                        <p id="debug-output"></p>
+                    </p>
+                </section>
+
+                <section id="vote-inputs">
+                    <h3>Vote</h3>
+                    <p>
+                        <label for="vote">Punkte</label>
+                        <input type="tel" id="vote" onkeypress="return (event.charCode !==8 && event.charCode ===0 || (event.charCode >= 48 && event.charCode <= 57))" />
+                        <button id="submit-vote" disabled>Submit Vote</button>
+                    </p>
+                    <p>
+                        <button id="show-votes" disabled>Show Votes</button>
+                    </p>
+                    <p>
+                        <button id="clear-votes" disabled>Clear Votes</button>
+                    </p>
+                </section>
+            </div>
+            <div id="votes">
+                <h3>Votes</h3>
+                <div id="votes-output">
+
+                </div>
+            </div>
+        </div>
+
+        <footer id="page-footer">
+            <p>
+                <a href="/">Home</a>
+                <a>|</a>
+                <a href="/pages/planning/" class="current">Planning</a>
+                <a>|</a>
+                <a href="/pages/snake/">Snake</a>
+                <a>|</a>
+                <a href="/pages/info/">Info</a>
+
+                <span id="copy" class="pull-right">&copy; dsc</span>
+            </p>
+        </footer>
+    </body>
+    <script src="app/domRefs.js"></script>
+    <script src="app/index.js"></script>
+</html>
