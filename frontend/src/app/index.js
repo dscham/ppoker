@@ -42,10 +42,12 @@ connectButton.addEventListener('click', (event) => {
                 case 'vote':
                     if (data.data.acknowledge) {
                         voted = true;
-                        voteCountOutput.textContent = data.data.voteCount;
+                        voteCountOutput.textContent = data.data.votes.length + '';
+                        data.data.votes.forEach(renderVoter)
                         submitVoteButton.disabled = true;
                     } else {
-                        voteCountOutput.textContent = data.data;
+                        voteCountOutput.textContent = data.data.length + '';
+                        data.data.forEach(renderVoter)
                     }
                     break;
                 case 'show':
@@ -69,6 +71,12 @@ connectButton.addEventListener('click', (event) => {
             function renderVote(vote) {
                 const neww = document.createElement('p');
                 neww.textContent = `${vote.vote}: ${vote.name}`;
+                votesOutput.appendChild(neww);
+            }
+
+            function renderVoter(vote) {
+                const neww = document.createElement('p');
+                neww.textContent = `?: ${vote.name}`;
                 votesOutput.appendChild(neww);
             }
         });

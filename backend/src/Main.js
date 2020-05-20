@@ -22,6 +22,13 @@ function connectionHandler($, socket) {
     let alive = true;
     setTimeout(() => aliveCheck($), 2550);
 
+    socket.send(
+        JSON.stringify({
+            command: 'vote',
+            data: $.votes
+        })
+    );
+
     function messageHandler($$, message) {
         let data = JSON.parse(message);
 
@@ -36,7 +43,7 @@ function connectionHandler($, socket) {
                                         command: 'vote',
                                         data: {
                                             acknowledge: true,
-                                            voteCount: $.votes.length
+                                            votes: $.votes
                                         }
                                     })
                                 );
@@ -44,7 +51,7 @@ function connectionHandler($, socket) {
                                 sock.send(
                                     JSON.stringify({
                                         command: 'vote',
-                                        data: $.votes.length
+                                        data: $.votes
                                     })
                                 );
                             }
