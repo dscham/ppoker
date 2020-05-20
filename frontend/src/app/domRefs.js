@@ -15,6 +15,7 @@ const clearVotesButton = document.querySelector('#clear-votes');
 const votesOutput = document.querySelector('#votes-output');
 const debugOutput = document.querySelector('#debug-output');
 const needNameOutput = document.querySelector('#need-name');
+const voteCountOutput = document.querySelector('#vote-count');
 
 // Display
 const voteInputsSection = document.querySelector('#vote-inputs');

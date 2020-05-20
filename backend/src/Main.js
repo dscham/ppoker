@@ -4,7 +4,7 @@ const WebSocket = require('ws');
 console.log('Constructing Server...');
 this.votes = [];
 this.sockets = [];
-this.server = new WebSocket.Server({'port': 4242}, () => console.log('Started Listening on:', this.server.address()));
+this.server = new WebSocket.Server({'port': 4242, host: '0.0.0.0'}, () => console.log('Started Listening on:', this.server.address()));
 this.server.on('connection', (socket) => connectionHandler(this, socket));
 
 //setInterval(() => console.log('Active Sockets', this.sockets.length), 5000);

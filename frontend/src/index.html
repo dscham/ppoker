@@ -14,25 +14,24 @@
         <div id="planning-poker-container">
             <div id="inputs">
                 <section id="session-inputs">
-                    <h3>Session</h3>
                     <p>
                         <label for="name">Name</label>
                         <input type="text" id="name" placeholder="Clicky"/>
+                        <button id="connect" disabled>Connect</button>
                         <a id="need-name">Enter Name with at least 3 chars!</a>
                     </p>
-                    <p>
+                    <p hidden>
                         <label for="url">URL</label>
                         <input type="text" id="url" placeholder="example.com:1337" disabled/>
-                        <button id="connect" disabled>Connect</button>
-                        <p id="debug-output"></p>
                     </p>
+                    <p id="debug-output"></p>
                 </section>
 
                 <section id="vote-inputs">
                     <h3>Vote</h3>
                     <p>
                         <label for="vote">Punkte</label>
-                        <input type="tel" id="vote" onkeypress="return (event.charCode !==8 && event.charCode ===0 || (event.charCode >= 48 && event.charCode <= 57))" />
+                        <input type="tel" id="vote" placeholder="0,1,2,3,5,8,13" onkeypress="return (event.charCode !==8 && event.charCode ===0 || (event.charCode >= 48 && event.charCode <= 57))" />
                         <button id="submit-vote" disabled>Submit Vote</button>
                     </p>
                     <p>
@@ -44,7 +43,7 @@
                 </section>
             </div>
             <div id="votes">
-                <h3>Votes</h3>
+                <h3>Votes <a id="vote-count"></a></h3>
                 <div id="votes-output">
 
                 </div>
