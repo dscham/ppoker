@@ -3,7 +3,7 @@ let voted = false;
 
 console.log('Initialising client...');
 
-setUseEnabled(nameField.value.length >= 3);
+setUseEnabled(nameField.value.length);
 
 urlField.value = `${location.hostname}:4242`;
 voteField.value = null;
@@ -21,7 +21,7 @@ connectButton.addEventListener('click', (event) => {
 
         nameField.disabled = true;
         clearDebugOutput();
-        setUseEnabled(nameField.value.length >= 3);
+        setUseEnabled(nameField.value.length);
 
         ws.addEventListener('open', () => {
             console.log('Opening websocket to ', `ws://${urlField.value}!`);
@@ -40,11 +40,13 @@ connectButton.addEventListener('click', (event) => {
                     ws.send(JSON.stringify({command: 'pong'}));
                     break;
                 case 'vote':
+                    votesOutput.innerHTML = '';
                     if (data.data.acknowledge) {
-                        voted = true;
+                        //voted = true;
+                        currentVoteOutput.textContent = 'Your Vote: ' + data.data.votes.find(v => v.name === nameField.value).vote;
                         voteCountOutput.textContent = data.data.votes.length + '';
                         data.data.votes.forEach(renderVoter)
-                        submitVoteButton.disabled = true;
+                        //submitVoteButton.disabled = true;
                     } else {
                         voteCountOutput.textContent = data.data.length + '';
                         data.data.forEach(renderVoter)
@@ -56,8 +58,10 @@ connectButton.addEventListener('click', (event) => {
                     break;
                 case 'clear':
                     votesOutput.innerHTML = '';
-                    voted = false;
-                    voteCountOutput.textContent = null;
+                    currentVoteOutput.textContent = '';
+                    voteField.value = null;
+                    //voted = false;
+                    voteCountOutput.textContent = 0 + '';
                     submitVoteButton.disabled = false;
                     break;
                 case 'error':
@@ -82,21 +86,31 @@ connectButton.addEventListener('click', (event) => {
         });
 
         ws.addEventListener('error', (err) => {
-            console.log(err);
-
-            writeDebugOutput(`Error; Check console.`, 'red');
+            console.log('ws.onerror', err);
+            console.log('WebSocket Open?');
+            if (ws.readyState === 1) {
+                console.log('✔');
+            } else {
+                console.log('❌');
+                writeDebugOutput(`Error; Check console.`, 'red');
+                cleanUp(false);
+            }
         });
     } else {
-        ws.close();
+        cleanUp(true);
+    }
+
+    function cleanUp(clearDebug) {
+        if (!!ws && !!ws.close && typeof ws.close === 'function') ws.close();
         ws = undefined;
 
         voteField.value = null;
         nameField.disabled = false;
         connectButton.textContent = 'Connect';
         submitVoteButton.disabled = true;
-        setUseEnabled(nameField.value.length >= 3);
+        setUseEnabled(nameField.value.length);
 
-        clearDebugOutput();
+        if (clearDebug) clearDebugOutput();
     }
 });
 
@@ -108,12 +122,11 @@ submitVoteButton.addEventListener('click', (event) => {
         return;
     }
 
-    if (voted) {
-        writeDebugOutput(`Error; 'Clear Votes' to vote again`, 'red');
-        return;
-    }
-
-    writeDebugOutput(`Connected to ws://${urlField.value}!`, 'green');
+    // if (voted) {
+    //     writeDebugOutput(`Error; 'Clear Votes' to vote again`, 'red');
+    //     return;
+    // }
+    //writeDebugOutput(`Connected to ws://${urlField.value}!`, 'green');
 
     const command = getCommandObject('vote',
         {
@@ -149,7 +162,7 @@ voteField.addEventListener('keyup', (event) => submitVoteButton.disabled = !even
 
 
 function nameFieldListener(event) {
-    setUseEnabled(event.target.value.length >= 3);
+    setUseEnabled(event.target.value.length);
 }
 
 function getCommandObject(command, payload) {
@@ -171,7 +184,9 @@ function clearDebugOutput() {
     debugOutput.hidden = true;
 }
 
-function setUseEnabled(enabled) {
+function setUseEnabled(length) {
+    const enabled = length >= 2;
+
     needNameOutput.hidden = enabled;
 
     connectButton.disabled = !enabled;

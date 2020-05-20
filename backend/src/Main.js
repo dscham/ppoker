@@ -35,37 +35,28 @@ function connectionHandler($, socket) {
         switch (data.command) {
             case 'vote':
                 console.log('<< vote from', $$.sockets.indexOf(socket));
-                if (tryPushVote(data.data, $$.votes)) {
-                    $$.sockets.forEach((sock) => {
-                            if (sock === socket) {
-                                sock.send(
-                                    JSON.stringify({
-                                        command: 'vote',
-                                        data: {
-                                            acknowledge: true,
-                                            votes: $.votes
-                                        }
-                                    })
-                                );
-                            } else {
-                                sock.send(
-                                    JSON.stringify({
-                                        command: 'vote',
-                                        data: $.votes
-                                    })
-                                );
-                            }
+                pushOrUpdateVote(data.data, $$.votes)
+                $$.sockets.forEach((sock) => {
+                        if (sock === socket) {
+                            sock.send(
+                                JSON.stringify({
+                                    command: 'vote',
+                                    data: {
+                                        acknowledge: true,
+                                        votes: $.votes
+                                    }
+                                })
+                            );
+                        } else {
+                            sock.send(
+                                JSON.stringify({
+                                    command: 'vote',
+                                    data: $.votes
+                                })
+                            );
                         }
-                    );
-                } else {
-                    socket.send(
-                        JSON.stringify({
-                            command: 'error',
-                            data: `Vote for '${data.data.name}' already exists. Reconnect with new name or clear votes!`
-                        })
-                    )
-                }
-                //$$.votes.push(data.data);
+                    }
+                );
                 break;
             case 'show':
                 console.log('<< show from', $$.sockets.indexOf(socket));
@@ -92,10 +83,13 @@ function connectionHandler($, socket) {
         }
     }
     
-    function tryPushVote(vote, array) {
-        if (!!array.find(v => v.name === vote.name)) return false;
+    function pushOrUpdateVote(vote, array) {
+        const index = array.indexOf(array.find(v => v.name === vote.name));
+        if (index > -1) {
+            array[index] = vote;
+            return;
+        }
         array.push(vote);
-        return true;
     }
 
     function errorHandler(err) {
