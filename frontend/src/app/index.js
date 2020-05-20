@@ -40,10 +40,14 @@ connectButton.addEventListener('click', (event) => {
                     ws.send(JSON.stringify({command: 'pong'}));
                     break;
                 case 'vote':
-                    console.log('Vote count', data.data);
                     if (data.data.acknowledge) {
                         voted = true;
+                        voteCountOutput.textContent = data.data.votes.length + '';
+                        data.data.votes.forEach(renderVoter)
                         submitVoteButton.disabled = true;
+                    } else {
+                        voteCountOutput.textContent = data.data.length + '';
+                        data.data.forEach(renderVoter)
                     }
                     break;
                 case 'show':
@@ -53,6 +57,7 @@ connectButton.addEventListener('click', (event) => {
                 case 'clear':
                     votesOutput.innerHTML = '';
                     voted = false;
+                    voteCountOutput.textContent = null;
                     submitVoteButton.disabled = false;
                     break;
                 case 'error':
@@ -65,7 +70,13 @@ connectButton.addEventListener('click', (event) => {
 
             function renderVote(vote) {
                 const neww = document.createElement('p');
-                neww.textContent = JSON.stringify(vote);
+                neww.textContent = `${vote.vote}: ${vote.name}`;
+                votesOutput.appendChild(neww);
+            }
+
+            function renderVoter(vote) {
+                const neww = document.createElement('p');
+                neww.textContent = `?: ${vote.name}`;
                 votesOutput.appendChild(neww);
             }
         });
