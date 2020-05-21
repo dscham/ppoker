@@ -1,0 +1,22 @@
+{
+  "name": "ppoker",
+  "version": "0.7.0",
+  "description": "",
+  "main": "App.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dscham/ppoker.git"
+  },
+  "keywords": [
+    "planning-poker",
+    "nodejs",
+    "ws",
+    "websocket"
+  ],
+  "author": "dscham",
+  "license": "ISC",
+  "dependencies": {
+    "node-static": "0.7.11",
+    "ws": "7.3.0"
+  }
+}
