@@ -9,7 +9,7 @@ Current features are
  - Clear Votes
  - Easy setup (clone, npm install and npm start from root)
 
-Demoe here: https://dscham-ppoker.herokuapp.com/ (free Dyno, so it's not always available maybe)
+Demo: https://dscham-ppoker.herokuapp.com/ (free Dyno, so it's not always available maybe)
  
 Planned features can be found in https://github.com/dscham/ppoker/projects/1
 Feel free to contact me if you want to contribute ☺
