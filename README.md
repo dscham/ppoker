@@ -11,8 +11,9 @@ Current features are
 
 Demo: https://dscham-ppoker.herokuapp.com/ (free Dyno, so it's not always available maybe)
  
-Planned features can be found in https://github.com/dscham/ppoker/projects/1
-Feel free to contact me if you want to contribute ☺
+Planned features can be found in https://github.com/dscham/ppoker/projects/1.
+
+Feel free to contact me if you want to contribute. ☺
 
 ## Disclaimer
-I don't guarantee security of the app at this point. It's meant to be used internally anyway-
+I don't guarantee security of the app at this point. It's meant to be used internally anyway.
