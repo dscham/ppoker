@@ -7,7 +7,7 @@ Current features are
  - Radio buttons for typical planning poker cards
  - Votes are hidden until Show Votes is clicked by one of the connected users
  - Clear Votes
- - Easy setup (clone, npm install and npm start from root)
+ - Easy setup (clone, npm install and npm start from root [Tested with latest nvm LTS version])
 
 Demo: https://dscham-ppoker.herokuapp.com/ (free Dyno, so it's not always available maybe)
  
