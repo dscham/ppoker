@@ -12,7 +12,7 @@ connectButton.addEventListener('click', (event) => {
             writeDebugOutput(`Enter Name before connecting!`, 'red');
             return;
         }
-        const webSocketProtocol = location.protocol === 'https:' ? 'wss' : 'ws' + '://';
+        const webSocketProtocol = (location.protocol === 'https:' ? 'wss' : 'ws') + '://';
         console.log(`WS URL: ${webSocketProtocol}${location.hostname}:${location.port}`);
         ws = new WebSocket(`${webSocketProtocol}${location.hostname}:${location.port}`);
 
