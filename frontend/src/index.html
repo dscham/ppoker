@@ -30,16 +30,11 @@
                 <section id="vote-inputs">
                     <p>
                         <label for="topic">Topic</label>
-                        <input type="text" id="topic" placeholder="Implement bug fix, etc."/>
+                        <input type="text" id="topic" placeholder="e.g. bug fix"/>
                     </p>
 
                     <h3>Vote</h3>
-                    <p>
-                        <label for="vote">Punkte</label>
-                        <input type="tel" id="vote" placeholder="0,1,2,3,5,8,13" onkeypress="return (event.charCode !==8 && event.charCode ===0 || (event.charCode >= 48 && event.charCode <= 57))" />
-                        <button id="submit-vote" disabled>Submit Vote</button>
-                        <a id="current-vote"></a>
-                    </p>
+                    <p id="vote-buttons"></p>
                     <p>
                         <button id="show-votes" disabled>Show Votes</button>
                     </p>
