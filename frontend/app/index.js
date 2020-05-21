@@ -5,7 +5,7 @@ console.log('Initialising client...');
 setUseEnabled(nameField.value.length);
 createVoteButtons();
 
-urlField.value = `${location.hostname}:4242`;
+urlField.value = `${location.hostname}:80`;
 
 connectButton.addEventListener('click', (event) => {
     event.preventDefault();

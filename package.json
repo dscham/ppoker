@@ -7,6 +7,9 @@
     "type": "git",
     "url": "https://github.com/dscham/ppoker.git"
   },
+  "scripts": {
+    "start": "node App.js"
+  },
   "keywords": [
     "planning-poker",
     "nodejs",
