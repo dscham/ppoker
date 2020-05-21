@@ -1,13 +1,11 @@
 let ws = undefined;
-let voted = false;
 
 console.log('Initialising client...');
 
 setUseEnabled(nameField.value.length);
+createVoteButtons();
 
 urlField.value = `${location.hostname}:4242`;
-voteField.value = null;
-submitVoteButton.disabled = true;
 
 connectButton.addEventListener('click', (event) => {
     event.preventDefault();
@@ -35,18 +33,13 @@ connectButton.addEventListener('click', (event) => {
 
             switch (data.command) {
                 case 'ping':
-                    // console.log('<< ping');
-                    // console.log('>> pong');
                     ws.send(JSON.stringify({command: 'pong'}));
                     break;
                 case 'vote':
                     votesOutput.innerHTML = '';
                     if (data.data.acknowledge) {
-                        //voted = true;
-                        currentVoteOutput.textContent = 'Your Vote: ' + data.data.votes.find(v => v.name === nameField.value).vote;
                         voteCountOutput.textContent = data.data.votes.length + '';
                         data.data.votes.forEach(renderVoter)
-                        //submitVoteButton.disabled = true;
                     } else {
                         voteCountOutput.textContent = data.data.length + '';
                         data.data.forEach(renderVoter)
@@ -58,11 +51,7 @@ connectButton.addEventListener('click', (event) => {
                     break;
                 case 'clear':
                     votesOutput.innerHTML = '';
-                    currentVoteOutput.textContent = '';
-                    voteField.value = null;
-                    //voted = false;
                     voteCountOutput.textContent = 0 + '';
-                    submitVoteButton.disabled = false;
                     break;
                 case 'topic':
                     topicField.value = data.data;
@@ -107,39 +96,58 @@ connectButton.addEventListener('click', (event) => {
         if (!!ws && !!ws.close && typeof ws.close === 'function') ws.close();
         ws = undefined;
 
-        voteField.value = null;
         nameField.disabled = false;
         connectButton.textContent = 'Connect';
-        submitVoteButton.disabled = true;
         setUseEnabled(nameField.value.length);
 
         if (clearDebug) clearDebugOutput();
     }
 });
 
-submitVoteButton.addEventListener('click', (event) => {
-    event.preventDefault();
+function createVoteButtons() {
+    voteButtonsParagraph.appendChild(createVoteButton('0'));
+    voteButtonsParagraph.appendChild(createVoteButton('1'));
+    voteButtonsParagraph.appendChild(createVoteButton('2'));
+    voteButtonsParagraph.appendChild(createVoteButton('3'));
+    voteButtonsParagraph.appendChild(createVoteButton('5'));
+    voteButtonsParagraph.appendChild(createVoteButton('8'));
+    voteButtonsParagraph.appendChild(createVoteButton('13'));
+    voteButtonsParagraph.appendChild(createVoteButton('20'));
+    voteButtonsParagraph.appendChild(createVoteButton('40'));
+    voteButtonsParagraph.appendChild(createVoteButton('100'));
+    voteButtonsParagraph.appendChild(document.createElement('br'));
+    voteButtonsParagraph.appendChild(createVoteButton('∞'));
+    voteButtonsParagraph.appendChild(createVoteButton('?'));
+    voteButtonsParagraph.appendChild(createVoteButton('Coffee'));
+}
 
-    if (!voteField.value || voteField.value < 0 || voteField.value > 13) {
-        writeDebugOutput(`Error; Vote must be >= 0 && < 13`, 'red');
-        return;
-    }
+function createVoteButton(value) {
+    const holder = document.createElement('a');
 
-    // if (voted) {
-    //     writeDebugOutput(`Error; 'Clear Votes' to vote again`, 'red');
-    //     return;
-    // }
-    //writeDebugOutput(`Connected to ws://${urlField.value}!`, 'green');
+    const input =  document.createElement('input');
+    input.type = 'radio';
+    input.name = 'vote';
+    input.id = `vote-${value}`;
+    input.value = value;
+    input.addEventListener('click', (event) => {
+        const command = getCommandObject('vote',
+            {
+                name: nameField.value,
+                vote: event.target.value
+            });
+        console.log('>> ', command);
 
-    const command = getCommandObject('vote',
-        {
-            name: nameField.value,
-            vote: voteField.value
-        });
-    console.log('>> ', command);
+        ws.send(JSON.stringify(command));
+    });
+    holder.appendChild(input);
 
-    ws.send(JSON.stringify(command));
-});
+    const label = document.createElement('label');
+    label.for = input.id;
+    label.textContent = value;
+    holder.appendChild(label);
+
+    return holder;
+}
 
 showVotesButton.addEventListener('click', (event) => {
     event.preventDefault();
@@ -162,8 +170,6 @@ clearVotesButton.addEventListener('click', (event) => {
 nameField.addEventListener('keyup', (event) => {
     setUseEnabled(event.target.value.length);
 });
-
-voteField.addEventListener('keyup', (event) => submitVoteButton.disabled = !event.target.value);
 
 topicField.addEventListener('keyup', (event) => {
     event.preventDefault();
@@ -196,7 +202,6 @@ function setUseEnabled(length) {
 
     connectButton.disabled = !enabled;
     voteInputsSection.hidden = !ws;
-    voteField.disabled = !ws;
     showVotesButton.disabled = !ws;
     clearVotesButton.disabled = !ws;
 }

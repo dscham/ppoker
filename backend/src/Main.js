@@ -8,8 +8,6 @@ this.topic = '';
 this.server = new WebSocket.Server({'port': 4242, host: '0.0.0.0'}, () => console.log('Started Listening on:', this.server.address()));
 this.server.on('connection', (socket) => connectionHandler(this, socket));
 
-//setInterval(() => console.log('Active Sockets', this.sockets.length), 5000);
-
 function connectionHandler($, socket) {
     socket.on('message', (message) => messageHandler($, message));
     console.log(`Socket message handler started!`);
@@ -26,7 +24,7 @@ function connectionHandler($, socket) {
     socket.send(
         JSON.stringify({
             command: 'vote',
-            data: $.votes
+            data: filterVoteValues($.votes)
         })
     );
 
@@ -44,7 +42,7 @@ function connectionHandler($, socket) {
                                     command: 'vote',
                                     data: {
                                         acknowledge: true,
-                                        votes: filterVoteValues($$.votes, true)
+                                        votes: filterVoteValues($$.votes, data.data)
                                     }
                                 })
                             );
@@ -105,13 +103,14 @@ function connectionHandler($, socket) {
 
     function filterVoteValues(votes, vote) {
         return votes.map(v => {
-            if (!vote) {
-                return {
-                    name: v.name,
-                    vote: ''
-                };
+            if(vote && vote.name) {
+                return v;
             }
-            return v;
+
+            return {
+                name: v.name,
+                vote: ''
+            };
         });
     }
 
