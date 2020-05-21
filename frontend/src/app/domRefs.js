@@ -4,6 +4,7 @@ console.log('Initialising DOM references...');
 const nameField = document.querySelector('#name');
 const urlField = document.querySelector('#url');
 const voteField = document.querySelector('#vote');
+const topicField = document.querySelector('#topic');
 
 // Buttons
 const connectButton = document.querySelector('#connect');
