@@ -1,10 +1,11 @@
-const static = require('node-static');
-const file = new static.Server('./frontend');
+const nodeStatic = require('node-static');
+const wwwroot = new nodeStatic.Server('./frontend');
+const PPoker = require('./backend/Main.js');
 
-require('http').createServer(function (request, response) {
+const httpServer = require('http').createServer(function (request, response) {
     request.addListener('end', function () {
-        file.serve(request, response);
+        wwwroot.serve(request, response);
     }).resume();
-}).listen(process.env.PORT || 3000);
+}).listen(process.env.PORT || 80);
 
-require('./backend/Main.js')();
+new PPoker(httpServer);
