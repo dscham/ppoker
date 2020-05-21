@@ -4,6 +4,7 @@ const WebSocket = require('ws');
 console.log('Constructing Server...');
 this.votes = [];
 this.sockets = [];
+this.topic = '';
 this.server = new WebSocket.Server({'port': 4242, host: '0.0.0.0'}, () => console.log('Started Listening on:', this.server.address()));
 this.server.on('connection', (socket) => connectionHandler(this, socket));
 
@@ -43,7 +44,7 @@ function connectionHandler($, socket) {
                                     command: 'vote',
                                     data: {
                                         acknowledge: true,
-                                        votes: $.votes
+                                        votes: filterVoteValues($$.votes, true)
                                     }
                                 })
                             );
@@ -51,7 +52,7 @@ function connectionHandler($, socket) {
                             sock.send(
                                 JSON.stringify({
                                     command: 'vote',
-                                    data: $.votes
+                                    data: filterVoteValues($$.votes)
                                 })
                             );
                         }
@@ -63,7 +64,7 @@ function connectionHandler($, socket) {
                 $$.sockets.forEach((sock) => sock.send(
                     JSON.stringify({
                         command: 'show',
-                        data: $.votes
+                        data: $$.votes
                     })
                 ));
                 break;
@@ -72,6 +73,16 @@ function connectionHandler($, socket) {
                 $$.votes = [];
                 $$.sockets.forEach((sock) => sock.send(
                     message
+                ));
+                break;
+            case 'topic':
+                console.log('<< topic from', $$.sockets.indexOf(socket));
+                $.topic = data.data;
+                $$.sockets.forEach((sock) => sock.send(
+                    JSON.stringify({
+                        command: 'topic',
+                        data: $$.topic
+                    })
                 ));
                 break;
             case 'pong':
@@ -90,6 +101,18 @@ function connectionHandler($, socket) {
             return;
         }
         array.push(vote);
+    }
+
+    function filterVoteValues(votes, vote) {
+        return votes.map(v => {
+            if (!vote) {
+                return {
+                    name: v.name,
+                    vote: ''
+                };
+            }
+            return v;
+        });
     }
 
     function errorHandler(err) {

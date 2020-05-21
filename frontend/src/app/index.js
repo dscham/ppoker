@@ -35,8 +35,8 @@ connectButton.addEventListener('click', (event) => {
 
             switch (data.command) {
                 case 'ping':
-                    console.log('<< ping');
-                    console.log('>> pong');
+                    // console.log('<< ping');
+                    // console.log('>> pong');
                     ws.send(JSON.stringify({command: 'pong'}));
                     break;
                 case 'vote':
@@ -63,6 +63,9 @@ connectButton.addEventListener('click', (event) => {
                     //voted = false;
                     voteCountOutput.textContent = 0 + '';
                     submitVoteButton.disabled = false;
+                    break;
+                case 'topic':
+                    topicField.value = data.data;
                     break;
                 case 'error':
                     writeDebugOutput(data.data, 'red');
@@ -156,14 +159,16 @@ clearVotesButton.addEventListener('click', (event) => {
     ws.send(JSON.stringify(command));
 });
 
-nameField.addEventListener('keyup', nameFieldListener);
+nameField.addEventListener('keyup', (event) => {
+    setUseEnabled(event.target.value.length);
+});
+
 voteField.addEventListener('keyup', (event) => submitVoteButton.disabled = !event.target.value);
 
-
-
-function nameFieldListener(event) {
-    setUseEnabled(event.target.value.length);
-}
+topicField.addEventListener('keyup', (event) => {
+    event.preventDefault();
+    ws.send(JSON.stringify(getCommandObject('topic', event.target.value)));
+});
 
 function getCommandObject(command, payload) {
     return {
