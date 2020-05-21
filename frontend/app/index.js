@@ -5,8 +5,6 @@ console.log('Initialising client...');
 setUseEnabled(nameField.value.length);
 createVoteButtons();
 
-urlField.value = `${location.hostname}:80`;
-
 connectButton.addEventListener('click', (event) => {
     event.preventDefault();
     if (!ws) {
@@ -15,17 +13,17 @@ connectButton.addEventListener('click', (event) => {
             return;
         }
 
-        ws = new WebSocket(`ws://${urlField.value}`);
+        ws = new WebSocket(`ws://${location.hostname}:80`);
 
         nameField.disabled = true;
         clearDebugOutput();
         setUseEnabled(nameField.value.length);
 
         ws.addEventListener('open', () => {
-            console.log('Opening websocket to ', `ws://${urlField.value}!`);
+            console.log('Opening websocket to ', `ws://${location.hostname}:80!`);
             connectButton.textContent = 'Disconnect';
 
-            writeDebugOutput(`Connected to ws://${urlField.value}!`, 'green');
+            writeDebugOutput(`Connected to ws://${location.hostname}:80!`, 'green');
         });
 
         ws.addEventListener('message', (ev) => {

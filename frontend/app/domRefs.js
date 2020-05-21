@@ -2,7 +2,6 @@ console.log('Initialising DOM references...');
 
 // Inputs
 const nameField = document.querySelector('#name');
-const urlField = document.querySelector('#url');
 const topicField = document.querySelector('#topic');
 
 // Buttons
