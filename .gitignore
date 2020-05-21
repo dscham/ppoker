@@ -1,7 +1,7 @@
 /.idea/
 /backend/backend.iml
 /frontend/frontend.iml
-/backend/src/npm-debug.log
-/backend/src/'/
-/backend/node_modules/
+/backend/npm-debug.log
 /backend/'/
+/node_modules/
+/'
