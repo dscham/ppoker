@@ -12,7 +12,7 @@ connectButton.addEventListener('click', (event) => {
             writeDebugOutput(`Enter Name before connecting!`, 'red');
             return;
         }
-        const webSocketProtocol = location.protocol === 'https' ? 'wss' : 'ws' + '://';
+        const webSocketProtocol = location.protocol === 'https:' ? 'wss' : 'ws' + '://';
         ws = new WebSocket(`${webSocketProtocol}${location.hostname}:${location.port}`);
 
         nameField.disabled = true;
