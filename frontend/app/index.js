@@ -12,18 +12,19 @@ connectButton.addEventListener('click', (event) => {
             writeDebugOutput(`Enter Name before connecting!`, 'red');
             return;
         }
-
-        ws = new WebSocket(`ws://${location.hostname}:80`);
+        const webSocketProtocol = location.protocol === 'https' ? 'wss' : 'ws' + '://';
+        ws = new WebSocket(`${webSocketProtocol}${location.hostname}:${location.port}`);
 
         nameField.disabled = true;
         clearDebugOutput();
         setUseEnabled(nameField.value.length);
 
         ws.addEventListener('open', () => {
-            console.log('Opening websocket to ', `ws://${location.hostname}:80!`);
+            console.log('Opening websocket to ', `${webSocketProtocol}${location.hostname}:${location.port}!`);
             connectButton.textContent = 'Disconnect';
 
-            writeDebugOutput(`Connected to ws://${location.hostname}:80!`, 'green');
+            writeDebugOutput(`Connected to ${webSocketProtocol}${location.hostname}:${location.port}!`,
+                'green');
         });
 
         ws.addEventListener('message', (ev) => {
