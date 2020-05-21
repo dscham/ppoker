@@ -13,6 +13,7 @@ connectButton.addEventListener('click', (event) => {
             return;
         }
         const webSocketProtocol = location.protocol === 'https:' ? 'wss' : 'ws' + '://';
+        console.log(`WS URL: ${webSocketProtocol}${location.hostname}:${location.port}`);
         ws = new WebSocket(`${webSocketProtocol}${location.hostname}:${location.port}`);
 
         nameField.disabled = true;
