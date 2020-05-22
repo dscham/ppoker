@@ -29,7 +29,9 @@ class PPokerServer {
     }
 
     connectionHandler($, socket) {
-        $.connections.push(new Connection(socket, $));
+        const connection = new Connection(socket, $);
+        $.connections.push(connection);
+        console.log(`<< New Connection '${connection.id}'`);
     }
 
     upsertUser(connectionId, name) {
@@ -69,7 +71,7 @@ class PPokerServer {
                     });
                 }
             } catch (e) {
-                console.error(e);
+                console.log(e);
             }
         });
 
@@ -87,7 +89,7 @@ class PPokerServer {
                         data: this.votes
                     });
                 } catch (e) {
-                    console.error(e);
+                    console.log(e);
                 }
             }
         );
@@ -102,7 +104,7 @@ class PPokerServer {
                         command: 'clear'
                     });
                 } catch (e) {
-                    console.error(e);
+                    console.log(e);
                 }
             }
         );
@@ -118,14 +120,14 @@ class PPokerServer {
                         data: this.topic
                     });
                 } catch (e) {
-                    console.error(e);
+                    console.log(e);
                 }
             }
         );
     }
 
     terminateConnection(connectionId) {
-        console.log(`<< Connection '${connectionId}' dead.`);
+        console.log(`<< Connection '${connectionId}' dead`);
         const connection = this.connections.find(c => c.id === connectionId);
         connection.terminate();
         this.connections.splice(this.connections.indexOf(connection), 1);
