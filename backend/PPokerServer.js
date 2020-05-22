@@ -17,12 +17,12 @@ class PPokerServer {
     getServer(server) {
         if (!!server) {
             return new WebSocket.Server(
-                { server },
+                {server},
                 () => console.log('Started Listening on:', this.server.address())
             );
         } else {
             return new WebSocket.Server(
-                { 'port': 4242, host: '0.0.0.0' },
+                {'port': 4242, host: '0.0.0.0'},
                 () => console.log('Started Listening on:', this.server.address())
             );
         }
@@ -53,21 +53,23 @@ class PPokerServer {
 
         const connection = this.connections.find(c => c.id === connectionId);
         this.connections.forEach((conn) => {
-            if (conn.id === connection.id) {
-                conn.send({
-                    command: 'vote-accepted',
-                    data: {
-                        vote: vote,
-                        votes: filterValues(this.votes)
-                    }
-                });
-            } else {
-                conn.send(
-                    {
+            try {
+                if (conn.id === connection.id) {
+                    conn.send({
+                        command: 'vote-accepted',
+                        data: {
+                            vote: vote,
+                            votes: filterValues(this.votes)
+                        }
+                    });
+                } else {
+                    conn.send({
                         command: 'vote',
                         data: filterValues(this.votes)
-                    }
-                );
+                    });
+                }
+            } catch (e) {
+                console.error(e);
             }
         });
 
@@ -78,32 +80,47 @@ class PPokerServer {
 
     showVotes(connectionId) {
         console.log(`<< Show on Connection '${connectionId}'`);
-        this.connections.forEach((conn) =>
-            conn.send({
-                command: 'show',
-                data: this.votes
-            })
+        this.connections.forEach((conn) => {
+                try {
+                    conn.send({
+                        command: 'show',
+                        data: this.votes
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
+            }
         );
     }
 
     clearVotes(connectionId) {
         console.log(`<< Clear on Connection '${connectionId}'`);
         this.votes = [];
-        this.connections.forEach((conn) =>
-            conn.send({
-                command: 'clear'
-            })
+        this.connections.forEach((conn) => {
+                try {
+                    conn.send({
+                        command: 'clear'
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
+            }
         );
     }
 
     updateTopic(connectionId, topic) {
         console.log(`<< Topic changed on Connection '${connectionId}'`, topic);
         this.topic = topic;
-        this.connections.forEach((conn) =>
-            conn.send({
-                command: 'topic',
-                data: this.topic
-            })
+        this.connections.forEach((conn) => {
+                try {
+                    conn.send({
+                        command: 'topic',
+                        data: this.topic
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
+            }
         );
     }
 
