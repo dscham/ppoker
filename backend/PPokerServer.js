@@ -1,8 +1,7 @@
-// Imports
 const WebSocket = require('ws');
-const User = require('./User.js');
-const Connection = require('./Connection.js');
-const Vote = require('./Vote.js');
+const User = require('./User');
+const Connection = require('./Connection');
+const Vote = require('./Vote');
 
 class PPokerServer {
     constructor(server) {
