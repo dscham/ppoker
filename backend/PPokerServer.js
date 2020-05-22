@@ -37,22 +37,34 @@ class PPokerServer {
     upsertUser(connectionId, name) {
         console.log(`<< Register on Connection '${connectionId}'`, name);
         const existing = this.users.find(u => u.name === name);
+        const _user = existing ? existing.copy() : new User(name, connectionId);
         if (!!existing) {
             this.users[this.users.indexOf(existing)].update(name, connectionId);
         } else {
-            this.users.push(new User(name, connectionId));
+            this.users.push(_user);
         }
+
+        delete _user.connection;
+        delete _user.update;
+        delete _user.host; //TODO Remove when adding Host functionality
+        const connection = this.connections.find(c => c.id === connectionId);
+        connection.send({
+            command: 'register',
+            data: _user
+        });
     }
 
     upsertVote(connectionId, vote) {
         console.log(`<< Vote on Connection '${connectionId}'`, vote);
         const existing = this.votes.find(v => v.userId === vote.userId);
+        const _vote = existing ? existing.copy() : new Vote(vote.value, vote.userId);
         if (!!existing) {
             this.votes[this.votes.indexOf(existing)].update(value);
         } else {
-            this.votes.push(new Vote(vote.value, vote.userId));
+            this.votes.push(_vote);
         }
 
+        delete _vote.update;
         const connection = this.connections.find(c => c.id === connectionId);
         this.connections.forEach((conn) => {
             try {
@@ -60,7 +72,7 @@ class PPokerServer {
                     conn.send({
                         command: 'vote-accepted',
                         data: {
-                            vote: vote,
+                            vote: _vote,
                             votes: filterValues(this.votes)
                         }
                     });
