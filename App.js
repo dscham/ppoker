@@ -1,6 +1,7 @@
 const nodeStatic = require('node-static');
+const PPokerServer = require('./backend/PPokerServer.js');
+
 const wwwroot = new nodeStatic.Server('./frontend');
-const PPoker = require('./backend/Main.js');
 
 const httpServer = require('http').createServer(function (request, response) {
     request.addListener('end', function () {
@@ -8,4 +9,4 @@ const httpServer = require('http').createServer(function (request, response) {
     }).resume();
 }).listen(process.env.PORT || 80);
 
-new PPoker(httpServer);
+const wsServer = new PPokerServer(httpServer);
