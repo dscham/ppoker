@@ -3,60 +3,60 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Planning</title>
+        <title>PPoker</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="view/css/main.css">
+        <link rel="stylesheet" href="view/css/style.css">
         <link rel="stylesheet" href="view/css/font-awesome.min.css">
     </head>
     <body>
-        <h1>Planning Poker</h1>
+        <div id="container">
+            <h1 class="page-title">PPoker</h1>
+            <div id="ppoker-container">
+                <div id="input">
+                    <section id="registration">
+                            <div class="text-input">
+                                <label for="username">Name</label>
+                                <input type="text" id="username" placeholder="e.g. Clicky" >
+                            </div>
+                            <button id="join">Join</button>
+                    </section>
 
-        <div id="planning-poker-container">
-            <div id="inputs">
-                <section id="session-inputs">
-                    <p>
-                        <label for="name">Name</label>
-                        <input type="text" id="name" placeholder="Clicky"/>
-                        <button id="connect" disabled>Connect</button>
-                        <a id="need-name">Enter Name with at least 2 chars!</a>
-                    </p>
-                    <p hidden>
-                        <label for="url">URL</label>
-                        <input type="text" id="url" placeholder="example.com:1337" disabled/>
-                    </p>
-                    <p id="debug-output"></p>
-                </section>
+                    <section id="voting" hidden>
+                        <div class="editable-header">
+                            <label for="topic"></label>
+                            <input type="text" id="topic" value="Topic" onfocusin="if(value === 'Topic') value = ''; placeholder = 'Topic'" onfocusout="if(!value) value = 'Topic'"/>
+                        </div>
 
-                <section id="vote-inputs">
-                    <p>
-                        <label for="topic">Topic</label>
-                        <input type="text" id="topic" placeholder="e.g. bug fix"/>
-                    </p>
+                        <h3>Vote</h3>
+                        <div id="vote-buttons">
 
-                    <h3>Vote</h3>
-                    <p id="vote-buttons"></p>
-                    <p>
-                        <button id="show-votes" disabled>Show Votes</button>
-                    </p>
-                    <p>
-                        <button id="clear-votes" disabled>Clear Votes</button>
-                    </p>
-                </section>
-            </div>
-            <div id="votes">
-                <h3>Votes <a id="vote-count"></a></h3>
-                <div id="votes-output">
+                        </div>
+                        <div>
+                            <button id="show-votes">Show Votes</button>
+                        </div>
+                        <div>
+                            <button id="clear-votes">Clear Votes</button>
+                        </div>
+                    </section>
+                </div>
 
+                <div id="output">
+                    <section id="votes" hidden>
+                        <h3>Votes</h3>
+                        <ul id="vote-list">
+
+                        </ul>
+                    </section>
                 </div>
             </div>
-        </div>
 
-        <footer id="page-footer">
-            <p>
-                <span id="copy" class="pull-right">&copy; dsc</span>
-            </p>
-        </footer>
+            <footer id="ppoker-footer">
+                <a id="debug"></a>
+
+                <span id="copy">2020 with ❤️ by dscham</span>
+            </footer>
+        </div>
     </body>
-    <script src="app/domRefs.js"></script>
-    <script src="app/index.js"></script>
+
+    <script type="module" src="app/PPokerClient.js"></script>
 </html>

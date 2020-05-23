@@ -1,6 +1,6 @@
 {
   "name": "ppoker",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "",
   "main": "App.js",
   "repository": {
@@ -19,7 +19,8 @@
   "author": "dscham",
   "license": "ISC",
   "dependencies": {
-    "node-static": "0.7.11",
-    "ws": "7.3.0"
+    "node-static": "^0.7.11",
+    "shortid": "^2.2.15",
+    "ws": "^7.3.0"
   }
 }

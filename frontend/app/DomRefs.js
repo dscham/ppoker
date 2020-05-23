@@ -1,0 +1,9 @@
+export const username = document.querySelector('#username');
+export const join = document.querySelector('#join');
+export const voting = document.querySelector('#voting');
+export const topic = document.querySelector('#topic');
+export const voteButtons = document.querySelector('#vote-buttons');
+export const showVotes = document.querySelector('#show-votes');
+export const clearVotes = document.querySelector('#clear-votes');
+export const votes = document.querySelector('#votes');
+export const voteList = document.querySelector('#vote-list');

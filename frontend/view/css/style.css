@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;600;800&display=swap');
+
+:root {
+    --regular-weight: 400;
+    --medium-weight: 600;
+    --bold-weight: 800;
+}
+
+body,html {
+    padding: 0;
+    margin: 0;
+    font-family: "Maven Pro", sans-serif;
+    font-weight: var(--regular-weight);
+}
+
+h1 {
+    font-weight: var(--bold-weight);
+}
+
+footer {
+    position: absolute;
+    bottom: 10px;
+}
+
+#container {
+    padding: 10px;
+}
+
+#ppoker-container {
+    display: flex;
+}
+
+#input {
+    width: 50%;
+}
+
+#output {
+    width: 50%;
+}
+
+#vote-buttons {
+    padding: 0;
+}
+
+#vote-buttons label {
+    display: inline-block;
+    margin: 5px;
+    padding: 5px;
+    height: 45px;
+    width: 75px;
+
+    text-align: center;
+
+    background: aliceblue;
+    border: 1px solid lightblue;
+}
+
+#vote-buttons input[type=radio] {
+    opacity: 0;
+    position: absolute;
+}
+
+#vote-buttons input[type=radio]:checked + label {
+    background: lightblue;
+    border: 1px solid aliceblue;
+}
+
+#vote-list {
+    padding: 0;
+    list-style: none;
+}
+
+#vote-list li {
+    display: inline-block;
+    margin: 5px;
+    padding: 5px;
+    height: 45px;
+    width: 75px;
+
+    background: aliceblue;
+    border: 1px solid lightblue;
+}
+
+#vote-list .vote-user {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+}
+
+#vote-list .vote-value {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    text-align: center;
+    font-weight: var(--medium-weight);
+    font-size: 1.25em;
+}
+
+.page-title {
+    margin: 0 0 20px 0;
+}
+
+.vote-card {
+    display: inline-block;
+}
+
+.editable-header input {
+    font-size: 2em;
+    font-weight: var(--bold-weight);
+    border: none;
+}
+
+.editable-header input:hover {
+    cursor: pointer;
+    background: aliceblue;
+}
+
+.editable-header input:focus {
+    background: aliceblue;
+}
+
+.editable-header input:focus:hover {
+    cursor: text;
+    background: aliceblue;
+}
+
+.text-input {
+
+}
