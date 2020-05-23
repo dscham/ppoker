@@ -1,4 +1,7 @@
 class Vote {
+    value;
+    userId;
+
     constructor(value, userId) {
         this.value = value;
         this.userId = userId;

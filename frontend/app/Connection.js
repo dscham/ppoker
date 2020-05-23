@@ -1,71 +1,47 @@
-const shortId = require('shortid');
-
-class Connection {
-    id;
+export default class Connection {
+    client;
+    protocol;
     socket;
-    server;
-    alive;
 
-    constructor(socket, server) {
-        this.socket = socket;
-        this.server = server;
+    constructor(client) {
+        this.client = client;
 
-        this.id = shortId.generate();
-        this.alive = true;
-        this.registerHandlers();
-        this.heartbeat = setInterval(() => this.checkAlive(this), 5000);
-    }
-
-    registerHandlers() {
-        this.socket.on('message', (message) => this.messageHandler(this, message));
-        this.socket.on('error', (error) => this.errorHandler(error));
+        this.protocol = (location.protocol === 'https:' ? 'wss' : 'ws') + '://';
+        this.socket = new WebSocket(`${this.protocol}${location.hostname}:${location.port}`);
+        this.socket.addEventListener('message', message => this.messageHandler(this, message));
     }
 
     messageHandler(_this, message) {
-        let data = JSON.parse(message);
+        const data = JSON.parse(message.data);
 
         switch (data.command) {
-            case 'register':
-                _this.server.upsertUser(_this.id, data.data);
+            case 'ping':
+                _this.send({command: 'pong'});
+                break;
+            case 'register-accepted':
+                _this.client.handleRegisterAccepted(data.data);
+                break;
+            case 'vote-accepted':
+                _this.client.handleVoteAccepted(data.data);
                 break;
             case 'vote':
-                _this.server.upsertVote(_this.id, data.data);
+                _this.client.handleVote(data.data);
                 break;
             case 'show':
-                _this.server.showVotes(_this.id);
+                _this.client.handleShow(data.data);
                 break;
             case 'clear':
-                _this.server.clearVotes(_this.id);
+                _this.client.handleClear();
                 break;
             case 'topic':
-                _this.server.updateTopic(_this.id, data.data);
+                _this.client.handleTopic(data.data);
                 break;
-            case 'pong':
-                this.alive = true;
+            case 'error':
+                _this.client.handleError(data.data);
                 break;
             default:
+                console.log('Unhandled command', data);
                 break;
-        }
-    }
-
-    errorHandler(err) {
-        console.log('Error!');
-        console.error(err);
-
-        throw err;
-    }
-
-    checkAlive(_this) {
-        if (_this.alive) {
-            _this.alive = false;
-            _this.send({ command : 'ping' });
-            setTimeout(() => checkResponse(_this), 250);
-        } else {
-            _this.server.terminateConnection(_this.id);
-        }
-
-        function checkResponse(__this) {
-            if (!__this.alive) __this.server.terminateConnection(__this.id);
         }
     }
 
@@ -108,12 +84,4 @@ class Connection {
                 };
         }
     }
-
-    terminate() {
-        this.socket.terminate();
-        this.socket = undefined;
-        clearInterval(this.heartbeat);
-    }
 }
-
-module.exports = Connection;
