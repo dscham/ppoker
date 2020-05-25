@@ -1,3 +1,5 @@
+import Command from "./Command.js";
+
 export default class Connection {
     client;
     protocol;
@@ -15,29 +17,26 @@ export default class Connection {
         const data = JSON.parse(message.data);
 
         switch (data.command) {
-            case 'ping':
-                _this.send({command: 'pong'});
+            case Command.Ping:
+                _this.send({command: Command.Pong});
                 break;
-            case 'register-accepted':
+            case Command.JoinAccepted:
                 _this.client.handleRegisterAccepted(data.data);
                 break;
-            case 'vote-accepted':
+            case Command.VoteAccepted:
                 _this.client.handleVoteAccepted(data.data);
                 break;
-            case 'vote':
+            case Command.Vote:
                 _this.client.handleVote(data.data);
                 break;
-            case 'show':
+            case Command.Show:
                 _this.client.handleShow(data.data);
                 break;
-            case 'clear':
+            case Command.Clear:
                 _this.client.handleClear();
                 break;
-            case 'topic':
+            case Command.Topic:
                 _this.client.handleTopic(data.data);
-                break;
-            case 'error':
-                _this.client.handleError(data.data);
                 break;
             default:
                 console.log('Unhandled command', data);

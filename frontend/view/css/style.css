@@ -65,6 +65,10 @@ footer {
     border: 1px solid aliceblue;
 }
 
+#vote-buttons input[type=radio]:hover + label {
+    cursor: pointer;
+}
+
 #vote-list {
     padding: 0;
     list-style: none;
