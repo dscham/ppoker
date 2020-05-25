@@ -1,5 +1,6 @@
 const WebSocket = require('ws');
 const Connection = require('./Connection');
+const Command = require('./Command');
 const User = require('./User');
 const Vote = require('./Vote');
 
@@ -43,18 +44,26 @@ class PPokerServer {
     }
 
     upsertUser(connectionId, name) {
-        console.log(`[${new Date().toISOString()}] << Register on Connection '${connectionId}'`, name);
+        const connection = this.connections.find(c => c.id === connectionId);
+        if (this.users.filter(user => user.connectionId === connectionId).length > 0) {
+            connection.send({
+                command: Command.JoinRejected,
+                data: 'Already joined.'
+            });
+        }
+
         const existing = this.users.find(u => u.name === name);
         const _user = existing ? existing : new User(name, connectionId);
         if (!!existing) {
             this.users[this.users.indexOf(existing)].update(name, connectionId);
+            console.log(`[${new Date().toISOString()}] << '${_user.name}' (ID: ${_user.id}) joined on Connection '${connectionId}'`);
         } else {
             this.users.push(_user);
+            console.log(`[${new Date().toISOString()}] << '${_user.name}' (ID: ${_user.id}) registered on Connection '${connectionId}'`);
         }
 
-        const connection = this.connections.find(c => c.id === connectionId);
         connection.send({
-            command: 'register-accepted',
+            command: Command.JoinAccepted,
             data: {
                 user: _user,
                 vote: this.votes.find(vote => vote.userId === _user.id),
@@ -65,7 +74,6 @@ class PPokerServer {
     }
 
     upsertVote(connectionId, vote) {
-        console.log(`[${new Date().toISOString()}] << Vote on Connection '${connectionId}'`, vote);
         const existing = this.votes.find(v => v.userId === vote.userId);
         const _vote = existing ? existing : new Vote(vote.value, vote.userId);
         if (!!existing) {
@@ -79,7 +87,7 @@ class PPokerServer {
             try {
                 if (conn.id === connection.id) {
                     conn.send({
-                        command: 'vote-accepted',
+                        command: Command.VoteAccepted,
                         data: {
                             vote: _vote,
                             votes: this.prepareVotesForAcceptedVote(this.votes)
@@ -87,7 +95,7 @@ class PPokerServer {
                     });
                 } else {
                     conn.send({
-                        command: 'vote',
+                        command: Command.Vote,
                         data: this.prepareVotesForAcceptedVote(this.votes)
                     });
                 }
@@ -95,6 +103,8 @@ class PPokerServer {
                 console.log(e);
             }
         });
+        const _user = this.users.find(user => user.id === _vote.userId);
+        console.log(`[${new Date().toISOString()}] << '${_user.name}' (ID: ${_user.id}) voted '${_vote.value}' on Connection '${connectionId}'`);
     }
 
     prepareVotesForAcceptedVote(votes) {
@@ -109,11 +119,11 @@ class PPokerServer {
     }
 
     showVotes(connectionId) {
-        console.log(`[${new Date().toISOString()}] << Show on Connection '${connectionId}'`);
+        console.log(`[${new Date().toISOString()}] << Show from Connection '${connectionId}'`);
         this.connections.forEach((conn) => {
                 try {
                     conn.send({
-                        command: 'show',
+                        command: Command.Show,
                         data: this.prepateVotesForShow(this.votes)
                     });
                 } catch (e) {
@@ -134,12 +144,12 @@ class PPokerServer {
     }
 
     clearVotes(connectionId) {
-        console.log(`[${new Date().toISOString()}] << Clear on Connection '${connectionId}'`);
+        console.log(`[${new Date().toISOString()}] << Clear from Connection '${connectionId}'`);
         this.votes = [];
         this.connections.forEach((conn) => {
                 try {
                     conn.send({
-                        command: 'clear'
+                        command: Command.Clear
                     });
                 } catch (e) {
                     console.log(e);
@@ -150,12 +160,12 @@ class PPokerServer {
     }
 
     updateTopic(connectionId, topic) {
-        console.log(`[${new Date().toISOString()}] << Topic changed on Connection '${connectionId}'`, topic);
+        console.log(`[${new Date().toISOString()}] << Topic changed to '${topic}' from Connection '${connectionId}'`);
         this.topic = topic;
         this.connections.forEach((conn) => {
                 try {
                     conn.send({
-                        command: 'topic',
+                        command: Command.Topic,
                         data: this.topic
                     });
                 } catch (e) {

@@ -1,4 +1,5 @@
 const shortId = require('shortid');
+const Command = require('./Command');
 
 class Connection {
     id;
@@ -25,22 +26,22 @@ class Connection {
         let data = JSON.parse(message);
 
         switch (data.command) {
-            case 'register':
+            case Command.Join:
                 _this.server.upsertUser(_this.id, data.data);
                 break;
-            case 'vote':
+            case Command.Vote:
                 _this.server.upsertVote(_this.id, data.data);
                 break;
-            case 'show':
+            case Command.Show:
                 _this.server.showVotes(_this.id);
                 break;
-            case 'clear':
+            case Command.Clear:
                 _this.server.clearVotes(_this.id);
                 break;
-            case 'topic':
+            case Command.Topic:
                 _this.server.updateTopic(_this.id, data.data);
                 break;
-            case 'pong':
+            case Command.Pong:
                 this.alive = true;
                 break;
             default:
@@ -58,7 +59,7 @@ class Connection {
     checkAlive(_this) {
         if (_this.alive) {
             _this.alive = false;
-            _this.send({ command : 'ping' });
+            _this.send({ command : Command.Ping });
             setTimeout(() => checkResponse(_this), 250);
         } else {
             _this.server.terminateConnection(_this.id);

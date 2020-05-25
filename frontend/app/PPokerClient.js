@@ -1,5 +1,6 @@
 import * as DomRefs from "./DomRefs.js";
 import Connection from "./Connection.js";
+import Command from "./Command.js";
 import User from "./User.js";
 import Vote from "./Vote.js";
 
@@ -18,8 +19,9 @@ export default class PPokerClient {
         this.topic = ``;
 
         this.renderVoteCards();
-        DomRefs.join.addEventListener('click',event => this.registerUser(this, event));
+        DomRefs.join.addEventListener('click',event => this.join(this, event));
         DomRefs.topic.addEventListener('focusout', event => this.changeTopic(this, event));
+        DomRefs.topic.addEventListener('keyup', event => { if (event.which === 13) this.changeTopic(this, event)});
         DomRefs.showVotes.addEventListener('click', event => this.showVotes(this, event));
         DomRefs.clearVotes.addEventListener('click', event => this.clearVotes(this, event))
     }
@@ -57,16 +59,17 @@ export default class PPokerClient {
         parent.appendChild(label);
     }
 
-    registerUser(_this, event) {
+    join(_this, event) {
         _this.connection.send({
-           command: 'register',
+           command: Command.Join,
            data: DomRefs.username.value
         });
     }
 
     changeTopic(_this, event) {
+        event.target.blur();
         _this.connection.send({
-            command: 'topic',
+            command: Command.Topic,
             data: event.target.value
         });
     }
@@ -76,17 +79,17 @@ export default class PPokerClient {
         _this.vote.userId = _this.user.id;
 
         _this.connection.send({
-           command: 'vote',
+           command: Command.Vote,
            data: _this.vote
         });
     }
 
     clearVotes(_this, event) {
-        _this.connection.send({ command: 'clear' });
+        _this.connection.send({ command: Command.Clear });
     }
 
     showVotes(_this, event) {
-        _this.connection.send({ command: 'show' });
+        _this.connection.send({ command: Command.Show });
     }
 
     handleRegisterAccepted(data) {
@@ -96,6 +99,9 @@ export default class PPokerClient {
         this.selectVoteCard(data.vote);
         this.handleTopic(data.topic);
 
+        DomRefs.username.value = this.user.name;
+        DomRefs.username.disabled = true;
+        DomRefs.join.disabled = true;
         DomRefs.voting.hidden = false;
         DomRefs.votes.hidden = false;
     }
