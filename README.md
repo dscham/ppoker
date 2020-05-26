@@ -8,7 +8,7 @@ Current Client features are
  - An editable Header for Topic
  - Card like buttons for common planning poker cards
  - Card like Votes display
- 
+
  - Easy setup (clone, npm install and npm start from root [Tested with nvm LTS version 12.16.3 and Heroku])
 
 Current Server features are
