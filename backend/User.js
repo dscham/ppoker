@@ -6,18 +6,19 @@ class User {
     connectionId;
     host;
 
-    constructor(name, connectionId) {
+    constructor(name, connectionId, host) {
         this.name = name;
         this.connectionId = connectionId;
         this.id = shortId.generate();
-        this.host = false;
+        this.host = !!host;
     }
 
-    update(name, connectionId) {
+    update(name, connectionId, host) {
         this.name = name;
         if(!!connectionId) {
             this.connectionId = connectionId;
         }
+        this.host = !!host;
     }
 }
 
