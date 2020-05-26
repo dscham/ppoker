@@ -43,7 +43,8 @@ class PPokerServer {
         console.log(`[${new Date().toISOString()}] || New Connection '${connection.id}'`);
     }
 
-    upsertUser(connectionId, name) {
+    upsertUser(connectionId, user) {
+        console.log(user);
         const connection = this.connections.find(c => c.id === connectionId);
         if (this.users.filter(user => user.connectionId === connectionId).length > 0) {
             connection.send({
@@ -52,14 +53,16 @@ class PPokerServer {
             });
         }
 
-        const existing = this.users.find(u => u.name === name);
-        const _user = existing ? existing : new User(name, connectionId);
+        const asHost = user.host ? 'as host ' : '';
+        const existing = this.users.find(u => u.name === user.name);
+        const _user = existing ? existing : new User(user.name, connectionId, user.host);
         if (!!existing) {
-            this.users[this.users.indexOf(existing)].update(name, connectionId);
-            console.log(`[${new Date().toISOString()}] << '${_user.name}' (ID: ${_user.id}) joined on Connection '${connectionId}'`);
+            _user.update(user.name, connectionId, user.host);
+            this.users[this.users.indexOf(_user)].update(user.name, connectionId, user.host);
+            console.log(`[${new Date().toISOString()}] << '${_user.name}' (ID: ${_user.id}) joined ${asHost}on Connection '${connectionId}'`);
         } else {
             this.users.push(_user);
-            console.log(`[${new Date().toISOString()}] << '${_user.name}' (ID: ${_user.id}) registered on Connection '${connectionId}'`);
+            console.log(`[${new Date().toISOString()}] << '${_user.name}' (ID: ${_user.id}) registered ${asHost}on Connection '${connectionId}'`);
         }
 
         connection.send({

@@ -20,6 +20,7 @@ export default class PPokerClient {
 
         this.renderVoteCards();
         DomRefs.join.addEventListener('click',event => this.join(this, event));
+        DomRefs.host.addEventListener('click', event => this.host(this, event));
         DomRefs.topic.addEventListener('focusout', event => this.changeTopic(this, event));
         DomRefs.topic.addEventListener('keyup', event => { if (event.which === 13) this.changeTopic(this, event)});
         DomRefs.showVotes.addEventListener('click', event => this.showVotes(this, event));
@@ -62,16 +63,33 @@ export default class PPokerClient {
     join(_this, event) {
         _this.connection.send({
            command: Command.Join,
-           data: DomRefs.username.value
+            data: {
+                name: DomRefs.username.value,
+                host: false
+            }
+        });
+    }
+
+    host(_this, event) {
+        _this.connection.send({
+            command: Command.Host,
+            data: {
+                name: DomRefs.username.value,
+                host: true
+            }
         });
     }
 
     changeTopic(_this, event) {
-        event.target.blur();
-        _this.connection.send({
-            command: Command.Topic,
-            data: event.target.value
-        });
+        if (this.user.host) {
+            event.target.blur();
+            _this.connection.send({
+                command: Command.Topic,
+                data: event.target.value
+            });
+        } else {
+            this.handleTopic();
+        }
     }
 
     submitVote(_this, event) {
@@ -92,16 +110,22 @@ export default class PPokerClient {
         _this.connection.send({ command: Command.Show });
     }
 
-    handleRegisterAccepted(data) {
+    handleJoinAccepted(data) {
+        console.log(data);
+
         this.user.name = data.user.name;
         this.user.id = data.user.id;
+        this.user.host = data.user.host;
         this.handleVote(data.votes);
         this.selectVoteCard(data.vote);
         this.handleTopic(data.topic);
 
+
+        DomRefs.hosting.hidden = !this.user.host;
         DomRefs.username.value = this.user.name;
         DomRefs.username.disabled = true;
         DomRefs.join.disabled = true;
+        DomRefs.host.disabled = true;
         DomRefs.voting.hidden = false;
         DomRefs.votes.hidden = false;
     }

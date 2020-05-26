@@ -21,7 +21,7 @@ export default class Connection {
                 _this.send({command: Command.Pong});
                 break;
             case Command.JoinAccepted:
-                _this.client.handleRegisterAccepted(data.data);
+                _this.client.handleJoinAccepted(data.data);
                 break;
             case Command.VoteAccepted:
                 _this.client.handleVoteAccepted(data.data);

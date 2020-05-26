@@ -27,6 +27,7 @@ class Connection {
 
         switch (data.command) {
             case Command.Join:
+            case Command.Host:
                 _this.server.upsertUser(_this.id, data.data);
                 break;
             case Command.Vote:
