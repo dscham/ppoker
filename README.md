@@ -1,5 +1,5 @@
 # PPoker
-PPoker is a virtual planning poker implementation on NodeJS and WebSocket
+PPoker is a virtual planning poker implementation on NodeJS with WebSockets and vanilla JS
 
 Current Client features are
  - Set a name
