@@ -1,13 +1,23 @@
 # PPoker
 PPoker is a virtual planning poker implementation on NodeJS and WebSocket
 
-Current features are
- - Set a name and connect to the WebSocket
- - A topic field that is synced instantly across all connected clients
- - Radio buttons for typical planning poker cards
- - Votes are hidden until Show Votes is clicked by one of the connected users
- - Clear Votes
- - Easy setup (clone, npm install and npm start from root [Tested with nvm LTS version 12.16.3])
+Current Client features are
+ - Set a name
+ - Join or Host
+   - Host can edit Topic, Show Votes, Clear Votes
+ - An editable Header for Topic
+ - Card like buttons for common planning poker cards
+ - Card like Votes display
+ 
+ - Easy setup (clone, npm install and npm start from root [Tested with nvm LTS version 12.16.3 and Heroku])
+
+Current Server features are
+ - Hosts the frontend and runs the backend
+ - Controls the App state (Users, Votes, Connections, Topic)
+ - User/Connection mapping kept in memory
+ - Reject join if User.name is already connected (Usernames are unique)
+ - set PORT in ENV to set the App Port
+ 
 
 Demo: https://dscham-ppoker.herokuapp.com/ (free Dyno, so it's not always available maybe)
  
