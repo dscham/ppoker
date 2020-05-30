@@ -3,6 +3,7 @@ import Connection from "./Connection.js";
 import Command from "./Command.js";
 import User from "./User.js";
 import Vote from "./Vote.js";
+import CardValues from "./CardValues.js";
 
 export default class PPokerClient {
     connection;
@@ -28,19 +29,7 @@ export default class PPokerClient {
     }
 
     renderVoteCards() {
-        this.generateVoteCardElement('0', DomRefs.voteButtons);
-        this.generateVoteCardElement('1', DomRefs.voteButtons);
-        this.generateVoteCardElement('2', DomRefs.voteButtons);
-        this.generateVoteCardElement('3', DomRefs.voteButtons);
-        this.generateVoteCardElement('5', DomRefs.voteButtons);
-        this.generateVoteCardElement('8', DomRefs.voteButtons);
-        this.generateVoteCardElement('13', DomRefs.voteButtons);
-        this.generateVoteCardElement('20', DomRefs.voteButtons);
-        this.generateVoteCardElement('40', DomRefs.voteButtons);
-        this.generateVoteCardElement('100', DomRefs.voteButtons);
-        this.generateVoteCardElement('∞', DomRefs.voteButtons);
-        this.generateVoteCardElement('dunno', DomRefs.voteButtons);
-        this.generateVoteCardElement('coffee', DomRefs.voteButtons);
+        CardValues.forEach(value => this.generateVoteCardElement(value,  DomRefs.voteButtons));
     }
 
     generateVoteCardElement(value, parent) {
